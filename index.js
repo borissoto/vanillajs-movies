@@ -6,22 +6,28 @@ const fetchData = async (searchTerm) => {
     },
   });
 
+  if (response.data.Error) {
+    return [];
+  }
+
   return response.data.Search; // it is uppercase S beacuse of the api, in general you should expect lowercase letter
 };
 
 const input = document.querySelector('input');
 
-const onInput = debounce((event) => {
-  const movies = fetchData(event.target.value);
+const onInput = async (event) => {
+  const movies = await fetchData(event.target.value);
 
   for (let movie of movies) {
     const div = document.createElement('div');
 
     div.innerHTML = `
-      <img src="${movie.Poster}"/>
-      <h1>${movie.Titel}</h1>
+      <img src="${movie.Poster}" />
+      <h1>${movie.Title}</h1>
     `;
+
+    document.querySelector('#target').appendChild(div);
   }
-});
+};
 
 input.addEventListener('input', debounce(onInput, 500));
